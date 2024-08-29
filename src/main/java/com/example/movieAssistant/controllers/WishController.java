@@ -4,6 +4,7 @@ import com.example.movieAssistant.model.dto.request.*;
 import com.example.movieAssistant.model.dto.response.MovieCountResponse;
 import com.example.movieAssistant.model.dto.response.MovieResponse;
 import com.example.movieAssistant.model.dto.response.WishResponse;
+import com.example.movieAssistant.services.WishParserService;
 import com.example.movieAssistant.services.WishService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -19,11 +20,18 @@ import java.util.List;
 public class WishController {
 
     public final WishService wishService;
+    public final WishParserService wishParserService;
 
     @PostMapping("/new")
     @Operation(summary = "Создание записи о желании посмотреть фильм")
     public WishResponse createWish(@RequestBody @Valid WishRequest request){
         return wishService.createWish(request);
+    }
+
+    @PostMapping("/new/pars")
+    @Operation(summary = "Создание записи о желании посмотреть фильм")
+    public WishResponse createWish(@RequestBody @Valid WishParseRequest request){
+        return wishParserService.createWishWithParsing(request);
     }
 
     @PutMapping("/{wish-id}")
