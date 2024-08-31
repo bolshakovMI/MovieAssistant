@@ -67,6 +67,10 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.GET, "/wish/all").hasRole("ADMIN")
                     .requestMatchers("/wish/**").authenticated()
 
+                    // swagger
+                    .requestMatchers("/swagger-ui**").hasRole("ADMIN")
+                    .requestMatchers("/v3/**").hasRole("ADMIN")
+
                     .anyRequest().permitAll()
             )
             .csrf(AbstractHttpConfigurer::disable)

@@ -4,6 +4,7 @@ import com.example.movieAssistant.model.dto.response.FriendshipResponse;
 import com.example.movieAssistant.model.enums.RequestConfirmationStatus;
 import com.example.movieAssistant.services.FriendService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -11,10 +12,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
-@AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @RestController
 @RequestMapping("/friendships")
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Tag(name="Отношения между пользователями")
 public class FriendController {
 
     FriendService friendService;

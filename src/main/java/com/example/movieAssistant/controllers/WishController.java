@@ -7,6 +7,7 @@ import com.example.movieAssistant.model.dto.response.WishResponse;
 import com.example.movieAssistant.services.WishParserService;
 import com.example.movieAssistant.services.WishService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/wish")
 @RequiredArgsConstructor
+@Tag(name="Записи о желании посмотреть фильм")
 public class WishController {
 
     public final WishService wishService;

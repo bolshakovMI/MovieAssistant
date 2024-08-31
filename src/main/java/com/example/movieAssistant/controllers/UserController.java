@@ -8,6 +8,7 @@ import com.example.movieAssistant.model.dto.response.JwtAuthenticationResponse;
 import com.example.movieAssistant.model.dto.response.UserResponse;
 import com.example.movieAssistant.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -16,10 +17,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
-@AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @RestController
 @RequestMapping("/users")
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Tag(name="Аккаунты пользователей")
 public class UserController {
 
     UserService userService;

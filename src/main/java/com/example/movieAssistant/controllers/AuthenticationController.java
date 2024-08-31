@@ -4,6 +4,7 @@ import com.example.movieAssistant.model.dto.request.LoginRequest;
 import com.example.movieAssistant.model.dto.response.JwtAuthenticationResponse;
 import com.example.movieAssistant.services.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 @AllArgsConstructor
+@Tag(name="Аутентификация")
 public class AuthenticationController {
 
     AuthenticationService authService;

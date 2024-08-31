@@ -4,6 +4,7 @@ import com.example.movieAssistant.model.dto.request.UserInfoRequest;
 import com.example.movieAssistant.model.dto.response.UserInfoResponse;
 import com.example.movieAssistant.services.UserInfoService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/user-info")
 @RequiredArgsConstructor
+@Tag(name="Подробная информация о пользователях")
 public class UserInfoController {
 
     private final UserInfoService userInfoService;
