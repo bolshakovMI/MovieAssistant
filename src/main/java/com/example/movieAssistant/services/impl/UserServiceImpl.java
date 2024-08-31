@@ -156,8 +156,6 @@ public class UserServiceImpl implements UserService {
         String pass = user.getPassword();
         user.setPassword(encoder.encode(pass));
 
-        user.setEnabled(true);
-
         userRepo.save(user);
 
         Authority auth = new Authority("ROLE_USER");
@@ -173,6 +171,33 @@ public class UserServiceImpl implements UserService {
         String jwtR = jwtService.generateRToken(request.getUsername());
 
         return new JwtAuthenticationResponse(jwt, jwtR);
+    }
+
+    @Transactional
+    @Override
+    public void createAdmin(String name, String password) {
+
+        String encodePassword = encoder.encode(password);
+        User user = new User(name, encodePassword);
+        userRepo.save(user);
+
+        Authority auth = new Authority("ROLE_ADMIN");
+        user.addAuthority(auth);
+        auth.setUsername(user);
+        authorityRepo.save(auth);
+
+        UserInfo userInfo = new UserInfo(
+                name + "@mail.ru",
+                user,
+                name,
+                name,
+                LocalDate.of(1994, 1, 1),
+                LocalDateTime.now());
+        userInfo = userInfoRepo.save(userInfo);
+        user.setUserInfo(userInfo);
+
+        jwtService.generateToken(name);
+        jwtService.generateRToken(name);
     }
 
     @Transactional

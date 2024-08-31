@@ -1,7 +1,10 @@
 package com.example.movieAssistant.config;
 
+import com.example.movieAssistant.exceptions.CustomException;
 import com.example.movieAssistant.security.JwtAuthenticationFilter;
+import com.example.movieAssistant.services.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -84,5 +87,18 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
             throws Exception {
         return config.getAuthenticationManager();
+    }
+
+    @Bean
+    CommandLineRunner initDatabase(UserService userService) {
+        return args -> {
+            try {
+                userService.getUser("admin");
+            } catch (CustomException e) {
+                if("Пользователь с таким логином отсутствует".equals(e.getMessage())){
+                    userService.createAdmin("admin", "Password1");
+                }
+            }
+        };
     }
 }
