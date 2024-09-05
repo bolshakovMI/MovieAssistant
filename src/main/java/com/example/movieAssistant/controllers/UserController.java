@@ -27,7 +27,7 @@ public class UserController {
     UserService userService;
 
     @GetMapping("/all")
-    @Operation(summary = "Получение информации обо всех аккаунтах")
+    @Operation(summary = "Получение учетных данных обо всех аккаунтах")
     public Page<UserResponse>  getAllUsers(@RequestParam(defaultValue = "1") Integer page,
                                            @RequestParam(defaultValue = "10") Integer perPage,
                                            @RequestParam(defaultValue = "username") String sort,
@@ -36,13 +36,13 @@ public class UserController {
     }
 
     @GetMapping("/{user}")
-    @Operation(summary = "Получение информации об одном аккаунте")
+    @Operation(summary = "Получение учетных данных одного аккаунта")
     public UserResponse getUserResponse(@PathVariable String user){
             return userService.getUserResponse(user);
         }
 
     @PostMapping("/new")
-    @Operation(summary = "Регистрация пользователя в программе")
+    @Operation(summary = "Регистрация нового пользователя")
     public JwtAuthenticationResponse createUser(@RequestBody @Valid UserRequest request){
         return userService.createUser(request);
     }

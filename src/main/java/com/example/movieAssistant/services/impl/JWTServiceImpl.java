@@ -18,8 +18,15 @@ import java.util.function.Function;
 public class JWTServiceImpl implements JWTService {
 
     private final UserRepo repository;
+
     @Value("${jwt.signing_key}")
     public String jwtSigningKey;
+
+    @Value("${jwt.expiration_time.access_token}")
+    public long accessTokenExpirationTime;
+
+    @Value("${jwt.expiration_time.refresh_token}")
+    public long refreshTokenExpirationTime;
 
 // 1. Методы генерации токена
     // метод генерирует токен
@@ -28,7 +35,7 @@ public class JWTServiceImpl implements JWTService {
                 .setSubject(username)
                 .claim("scope", "access")
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000*60*15))
+                .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpirationTime))
                 .signWith(SignatureAlgorithm.HS256, jwtSigningKey)
                 .compact();
     }
@@ -39,7 +46,7 @@ public class JWTServiceImpl implements JWTService {
                 .setSubject(username)
                 .claim("scope", "refresh")
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000*60*60*24*7))
+                .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpirationTime))
                 .signWith(SignatureAlgorithm.HS256, jwtSigningKey)
                 .compact();
 

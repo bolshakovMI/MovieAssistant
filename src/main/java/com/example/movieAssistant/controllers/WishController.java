@@ -31,7 +31,7 @@ public class WishController {
     }
 
     @PostMapping("/new/pars")
-    @Operation(summary = "Создание записи о желании посмотреть фильм")
+    @Operation(summary = "Создание записи о желании посмотреть фильм по id сайта imdb.com")
     public WishResponse createWish(@RequestBody @Valid WishParseRequest request){
         return wishParserService.createWishWithParsing(request);
     }
@@ -49,13 +49,13 @@ public class WishController {
     }
 
     @GetMapping("/{wish-id}")
-    @Operation(summary = "Получение конкретной записи")
+    @Operation(summary = "Получение конкретной записи по id")
     public WishResponse getWish(@PathVariable("wish-id") Long wishId) {
         return wishService.getWish(wishId);
     }
 
     @GetMapping("/all")
-    @Operation(summary = "Получение страницы записей независимо от пользователя")
+    @Operation(summary = "Получение общего списка записей")
     public Page<WishResponse> getAllWishes(@RequestParam(defaultValue = "1") Integer page,
                                               @RequestParam(defaultValue = "10") Integer perPage,
                                               @RequestParam(defaultValue = "id") String sort,
@@ -65,7 +65,7 @@ public class WishController {
     }
 
     @GetMapping("/top")
-    @Operation(summary = "Получение страницы самых популярных фильмов в приложении")
+    @Operation(summary = "Получение списка самых популярных фильмов в приложении")
     public List<MovieCountResponse> getTop(@RequestParam(defaultValue = "1") Integer page,
                                            @RequestParam(defaultValue = "10") Integer perPage) {
         return wishService.getTop(page, perPage);
@@ -108,14 +108,14 @@ public class WishController {
     }
 
     @GetMapping("/shared/any/param")
-    @Operation(summary = "Получение случайного фильма, общего для нескольких пользователей" +
-            " с учетом переданных параметров")
+    @Operation(summary = "Получение случайного фильма, общего для нескольких пользователей " +
+            "с учетом переданных параметров")
     public MovieResponse getOursRandomWishWithParam(@RequestBody @Valid WishParamWithFriendsRequest request) {
         return wishService.getOursRandomWishWithParam(request);
     }
 
     @GetMapping("/shared/all")
-    @Operation(summary = "Получение страницы фильмов, общих для нескольких пользователей")
+    @Operation(summary = "Получение списка фильмов, общих для нескольких пользователей")
     public Page<MovieResponse> getPageOursWish(@RequestParam(defaultValue = "1") Integer page,
                                                @RequestParam(defaultValue = "10") Integer perPage,
                                                @RequestBody @Valid WishWithFriendsRequest request) {
@@ -123,7 +123,7 @@ public class WishController {
     }
 
     @GetMapping("/shared/all/param")
-    @Operation(summary = "Получение страницы фильмов, общих для нескольких пользователей " +
+    @Operation(summary = "Получение списка фильмов, общих для нескольких пользователей " +
             "с учетом переданных параметров")
     public Page<MovieResponse> getPageOursWish(@RequestParam(defaultValue = "1") Integer page,
                                                @RequestParam(defaultValue = "10") Integer perPage,

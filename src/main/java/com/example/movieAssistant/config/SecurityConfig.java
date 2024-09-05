@@ -93,10 +93,10 @@ public class SecurityConfig {
     CommandLineRunner initDatabase(UserService userService) {
         return args -> {
             try {
-                userService.getUser("admin");
+                userService.getUser("admin2");
             } catch (CustomException e) {
                 if("Пользователь с таким логином отсутствует".equals(e.getMessage())){
-                    userService.createAdmin("admin", "Password1");
+                    userService.createAdmin("admin2", "Password1");
                 }
             }
         };
