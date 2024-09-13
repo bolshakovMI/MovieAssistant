@@ -18,8 +18,21 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
+  kafka:
+    bootstrap-servers: localhost:29092
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring:
+          json:
+            type:
+              mapping: User:com.example.movieAssistant.model.dto.event.User
+      acks: '-1'
+
 jwt:
   signing_key: 140ab0fb7a9e662bc7a684cb69ba8226056f49aad7faaea2e9d0e1c1f151ff32efa1f42ceec1fa41c1788bb1a26c3dc6
   expiration_time:
     access_token:  900_000
     refresh_token: 10_080_000
+server:
+  port: 8082
