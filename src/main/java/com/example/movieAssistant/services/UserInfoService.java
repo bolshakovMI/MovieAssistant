@@ -13,4 +13,6 @@ public interface UserInfoService {
     UserInfoResponse updateUser(Long id, UserInfoRequest request);
     UserInfo getUserDb(Long id);
     List<UserInfo> getAllByIds(List<Long> list);
+
+    String getLoginById(Long id);
 }

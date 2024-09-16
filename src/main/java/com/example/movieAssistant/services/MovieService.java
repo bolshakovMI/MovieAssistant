@@ -15,4 +15,6 @@ public interface MovieService {
     Movie createOrReturnMovie(WishRequest request);
 
     Movie createMovie(WishRequest request);
+
+    String getMovieById(Long id);
 }

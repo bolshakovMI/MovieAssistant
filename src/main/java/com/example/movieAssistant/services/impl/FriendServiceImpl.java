@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -134,6 +135,32 @@ public class FriendServiceImpl implements FriendService {
                 .collect(Collectors.toList());
 
         return new PageImpl<>(all);
+    }
+
+    @Override
+    public List<Friendship> getListAllUsersFriends(Long userId){
+        userInfoService.getUserDb(userId);
+        return friendRepo.findByUserIdAndWithdrawnAndStatus(userId, false, RequestConfirmationStatus.ACCEPTED);
+    }
+
+    @Override
+    public List<String> getListLoginsOfAllUsersFriends(Long userId){
+        List<Friendship> friendsList = getListAllUsersFriends(userId);
+
+        List<String> loginsList;
+        return friendsList
+                .stream()
+                .map(friendship -> {
+                    UserInfo user1 = friendship.getUser1();
+
+                    if (Objects.equals(user1.getId(), userId)){
+                        return friendship.getUser2();
+                    } else return user1;
+                })
+                .map(userInfo ->{
+                    return userInfo.getLogin().getUsername();
+                })
+                .collect(Collectors.toList());
     }
 
     @Override

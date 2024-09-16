@@ -32,6 +32,7 @@
 	<dependencies>
 
 		<!-- WEB -->
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -97,6 +98,14 @@
 			<artifactId>spring-kafka-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- ASPECT -->
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+
 		<!-- TEST -->
 
 		<dependency>
@@ -105,7 +114,7 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- OTHERS -->
+		<!-- DOCUMENTATION -->
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>

@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import java.util.List;
 import java.util.Optional;
 
 public interface FriendRepo  extends JpaRepository<Friendship, Long> {
@@ -26,6 +27,15 @@ public interface FriendRepo  extends JpaRepository<Friendship, Long> {
             @Param("isWithdrawn") boolean isWithdrawn,
             @Param("status") RequestConfirmationStatus status,
             Pageable pageable);
+
+    @Query("SELECT f FROM Friendship f WHERE " +
+            "(f.user1.id = :userId OR f.user2.id = :userId) AND " +
+            "f.withdrawn = :isWithdrawn AND " +
+            "f.status = :status")
+    List<Friendship> findByUserIdAndWithdrawnAndStatus(
+            @Param("userId") long userId,
+            @Param("isWithdrawn") boolean isWithdrawn,
+            @Param("status") RequestConfirmationStatus status);
 
     Page<Friendship> findAllByStatusAndWithdrawn(RequestConfirmationStatus status, boolean isWithdrawn, Pageable pageable);
 

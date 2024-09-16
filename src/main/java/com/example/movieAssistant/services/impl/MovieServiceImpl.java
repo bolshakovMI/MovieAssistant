@@ -1,5 +1,6 @@
 package com.example.movieAssistant.services.impl;
 
+import com.example.movieAssistant.exceptions.CustomException;
 import com.example.movieAssistant.model.db.entity.Genre;
 import com.example.movieAssistant.model.db.entity.Movie;
 import com.example.movieAssistant.model.db.repository.GenreRepo;
@@ -8,6 +9,7 @@ import com.example.movieAssistant.model.dto.request.WishRequest;
 import com.example.movieAssistant.services.MovieService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -76,6 +78,13 @@ public class MovieServiceImpl implements MovieService {
         }
 
         return movie;
+    }
+
+    @Override
+    public String getMovieById(Long id){
+        Movie movie = movieRepo.findMovieById(id).orElseThrow(
+                () -> new CustomException("Фильм с указанным id не найден", HttpStatus.NOT_FOUND));
+        return movie.getName();
     }
 
 }

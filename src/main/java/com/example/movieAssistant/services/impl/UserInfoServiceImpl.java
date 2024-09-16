@@ -124,4 +124,10 @@ public class UserInfoServiceImpl implements UserInfoService {
     public List<UserInfo> getAllByIds(List<Long> list){
         return userInfoRepo.findAllById(list);
     }
+
+    @Override
+    public String getLoginById(Long id) {
+        UserInfo user = getUserDb(id);
+        return user.getLogin().getUsername();
+    }
 }

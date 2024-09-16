@@ -26,7 +26,8 @@ spring:
         spring:
           json:
             type:
-              mapping: User:com.example.movieAssistant.model.dto.event.User
+              mapping:
+                WishCreateEvent:com.example.movieAssistant.model.dto.event.WishCreateEvent, FriendshipEvent:com.example.movieAssistant.model.dto.event.FriendshipEvent
       acks: '-1'
 
 jwt:
@@ -34,5 +35,3 @@ jwt:
   expiration_time:
     access_token:  900_000
     refresh_token: 10_080_000
-server:
-  port: 8082
