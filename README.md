@@ -8,6 +8,9 @@ Movie Assistant — это серверное приложение, реализ
 взаимодействия с реляционной базой данных, 
 которая управляет коллекцией фильмов, запланированных к просмотру.
 
+Приложение является частью разрабатываемого микросервисного приложения ([подробнее](#next)). 
+В текущей версии программы [реализован функционал](#kafka) для связи микросервисов через брокер сообщений Apache Kafka.
+
 ### Функции приложения
 1. Сохранение записей о фильмах:
 - Пользователь может добавлять фильмы в свой список, указывая ID картины с сайта imdb.com.
@@ -244,33 +247,33 @@ http://localhost:8080/wish/new/pars
 
 ### Параметры запроса
 
-##### <a id="per_page"> Integer perPage </a>
+#### <a id="per_page"> Integer perPage </a>
 + Количество записей на странице.
 + При пагинации результатов запроса клиент получит только указанное количество записей.
-##### <a id="page"> Integer page </a>
+#### <a id="page"> Integer page </a>
 + Номер страницы.
 + Указатель для пагинации.
-##### <a id="sort"> String sort </a>
+#### <a id="sort"> String sort </a>
 + Параметр сортировки записей.
-##### <a id="order"> Integer order </a>
+#### <a id="order"> Integer order </a>
 + Направление сортировки.
 + Допустимые варианты: ```ASC``` и ```DESC```.
-##### <a id="request_confirmation"> RequestConfirmationStatus status </a>
+#### <a id="request_confirmation"> RequestConfirmationStatus status </a>
 + Результат рассмотрения входящей заявки в друзья.
 + Допустимые варианты: ```UNCONSIDERED```, ```REJECTED``` и ```ACCEPTED```.
-##### <a id="status"> boolean status </a>
+#### <a id="status"> boolean status </a>
 + Изменение статуса отношений, которое требуется пользователю.
 + Допустимые варианты: ```true``` и ```false```.
 + Если используется отправителем заявки, то ```false``` – это отзыв заявки, а ```true``` – подтверждение направления заявки.
 + Если используется адресатом заявки, то ```false``` – отклонение заявки, а ```true``` – принятие заявки.
-##### <a id="withdrawn_status"> boolean withdrawn </a>
+#### <a id="withdrawn_status"> boolean withdrawn </a>
 + Изменение статуса заявки на добавление в друзья, которое требуется отправителю.
 + Допустимые варианты: ```true``` и ```false```.
 + ```False``` – это отзыв заявки, а ```true``` – подтверждение заявки.
 
 ### Шаблоны для тел запроса
 
-##### <a id="signup"> [UserRequest](src/main/java/com/example/movieAssistant/model/dto/request/UserRequest.java) </a>
+#### <a id="signup"> [UserRequest](src/main/java/com/example/movieAssistant/model/dto/request/UserRequest.java) </a>
 ```json
 {
   "email": "user1@mail.ru",
@@ -287,7 +290,7 @@ http://localhost:8080/wish/new/pars
 - Поле ```username``` должно быть уникальным в рамках приложения и больше 3 символов. 
 - Поле ```password``` должен содержать, как минимум, 1 заглавную букву, 1 строчную букву и 1 цифру.
 
-##### <a id="password_change"> [PasswordChangeRequest](src/main/java/com/example/movieAssistant/model/dto/request/PasswordChangeRequest.java) </a>
+#### <a id="password_change"> [PasswordChangeRequest](src/main/java/com/example/movieAssistant/model/dto/request/PasswordChangeRequest.java) </a>
 ```json
 {
     "username": "login1",
@@ -298,7 +301,7 @@ http://localhost:8080/wish/new/pars
 - Поле ```username``` указывает на логин пользователя, у которого изменяется пароль.
 - Поля ```oldPassword``` и ```newPassword``` должны содержать, как минимум, 1 заглавную букву, 1 строчную букву и 1 цифру.
 
-##### <a id="authority"> [AuthorityRequest](src/main/java/com/example/movieAssistant/model/dto/request/AuthorityRequest.java) </a>
+#### <a id="authority"> [AuthorityRequest](src/main/java/com/example/movieAssistant/model/dto/request/AuthorityRequest.java) </a>
 ```json
 {
   "username": "login1",
@@ -311,7 +314,7 @@ http://localhost:8080/wish/new/pars
 - Поле ```username``` указывает на логин пользователя, у которого изменяется набор ролей.
 - В настоящий момент в приложении доступны два варианта ролей: ```ROLE_ADMIN``` и ```ROLE_USER```.
 
-##### <a id="user_info"> [UserInfoRequest](src/main/java/com/example/movieAssistant/model/dto/request/UserInfoRequest.java) </a>
+#### <a id="user_info"> [UserInfoRequest](src/main/java/com/example/movieAssistant/model/dto/request/UserInfoRequest.java) </a>
 ```json
 {
   "email": "user1@mail.ru",
@@ -324,7 +327,7 @@ http://localhost:8080/wish/new/pars
 - Поля ```firstName``` и ```lastName``` должны состоять только из букв.
 - Поле ```birthDay``` должно соответствовать паттерну ```dd.MM.yyyy```.
 
-##### <a id="login"> [LoginRequest](src/main/java/com/example/movieAssistant/model/dto/request/LoginRequest.java) </a>
+#### <a id="login"> [LoginRequest](src/main/java/com/example/movieAssistant/model/dto/request/LoginRequest.java) </a>
 ```json
 {
   "username": "login1",
@@ -332,7 +335,7 @@ http://localhost:8080/wish/new/pars
 }
 ```
 
-##### <a id="wish_parse_request"> [WishParseRequest](src/main/java/com/example/movieAssistant/model/dto/request/WishParseRequest.java) </a>
+#### <a id="wish_parse_request"> [WishParseRequest](src/main/java/com/example/movieAssistant/model/dto/request/WishParseRequest.java) </a>
 ```json
 {
   "imdbId": "0455275",
@@ -345,7 +348,7 @@ http://localhost:8080/wish/new/pars
 - Поле ```imdbId``` должно содержать id фильма с сайта ```imdb.com``` c обязательным сохранением ведущих нулей.
 - Id фильма можно узнать по ссылке на сайте. Все URL страниц фильмов соответствуют паттерну ```https://www.imdb.com/title/tt + id_фильма```. 
 
-##### <a id="wish_update_request"> [WishUpdateRequest](src/main/java/com/example/movieAssistant/model/dto/request/WishUpdateRequest.java) </a>
+#### <a id="wish_update_request"> [WishUpdateRequest](src/main/java/com/example/movieAssistant/model/dto/request/WishUpdateRequest.java) </a>
 ```json
 {
   "viewed": false,
@@ -365,7 +368,7 @@ http://localhost:8080/wish/new/pars
   * Если поле ```shouldTagsBeChanged=true```, то отсутствие ```tagNames``` удаляет все теги пользователя к этому фильму.
   * Если ```shouldTagsBeChanged=false``` - отсутствие ```tagNames``` значит, что пользователь не планирует менять перечень тегов.
 
-##### <a id="wish_with_friends_request"> [WishWithFriendsRequest](src/main/java/com/example/movieAssistant/model/dto/request/WishWithFriendsRequest.java) </a>
+#### <a id="wish_with_friends_request"> [WishWithFriendsRequest](src/main/java/com/example/movieAssistant/model/dto/request/WishWithFriendsRequest.java) </a>
 ```json
 {
   "friendsIds": [
@@ -377,7 +380,7 @@ http://localhost:8080/wish/new/pars
 - Массив ```friendsIds``` указывает на пользователей, вместе с которыми текущий пользователь хочет найти общие фильмы.
 - В ```friendsIds``` указываются id пользователя в таблице ```user_info```.
 
-##### <a id="wish_param_request"> [WishParamRequest](src/main/java/com/example/movieAssistant/model/dto/request/WishParamRequest.java) </a>
+#### <a id="wish_param_request"> [WishParamRequest](src/main/java/com/example/movieAssistant/model/dto/request/WishParamRequest.java) </a>
 ```json
 {
   "viewed": false,
@@ -412,7 +415,7 @@ http://localhost:8080/wish/new/pars
   * Учитываются только теги, которые установлены текущим пользователем для конкретного фильма.
   * В случае отсутствия поля поиск будет осуществляться вне зависимости от тегов фильма.
 
-##### <a id="wish_param_with_friends_request"> [WishParamWithFriendsRequest](src/main/java/com/example/movieAssistant/model/dto/request/WishParamWithFriendsRequest.java) </a>
+#### <a id="wish_param_with_friends_request"> [WishParamWithFriendsRequest](src/main/java/com/example/movieAssistant/model/dto/request/WishParamWithFriendsRequest.java) </a>
 ```json
 {
   "viewed": false,
@@ -474,6 +477,79 @@ http://localhost:8080/wish/new/pars
 - Секретный ключ для генерации JWT настраивается свойством ```jwt.signing_key```, при запуске приложения или
 в конфигурационном файле [application.yml.](src/main/resources/application.yml)
 
+## <a id="kafka"> Интеграция микросервисов с использованием Apache Kafka </a>
+
+- Приложение содержит необходимые настройки и зависимости для отправки сообщений на сервер брокера Apache Kafka.
+- В настоящий момент приложение отправляет брокеру сообщения в случае вызова следующих методов:
+
+| Класс                                                                                         | Метод                                                      | Условие отправки сообщения                      | Топик            | Класс сообщения                       |
+|-----------------------------------------------------------------------------------------------|------------------------------------------------------------|-------------------------------------------------|------------------|---------------------------------------|
+| [WishParserService](src/main/java/com/example/movieAssistant/services/WishParserService.java) | createWishWithParsing(WishParseRequest request)            | Успешное добавление фильма в коллекцию          | "wish_create"    | [WishCreateEvent](#wish_create_event) |
+| [WishService](src/main/java/com/example/movieAssistant/services/WishService.java)             | updateWish(WishUpdateRequest request, Long wishId)         | Внесение информации о просмотре фильма          | "wish_update"    | [WishCreateEvent](#wish_create_event) |
+| [FriendService](src/main/java/com/example/movieAssistant/services/FriendService.java)         | considerRequest(Long id, RequestConfirmationStatus status) | Принятие входящей заявки на добавление в друзья | "new_friendship" | [FriendshipEvent](#friendship_event)  |
+
+#### <a id="wish_create_event"> [WishCreateEvent](src/main/java/com/example/movieAssistant/model/dto/event/WishCreateEvent.java) </a>
+Класс содержит следующие сведения:
+```
+- id и название, добавленного фильма,
+- id и логин пользователя, который добавил фильм,
+- список логинов друзей данного пользователя.
+```      
+
+#### <a id="friendship_event"> [FriendshipEvent](src/main/java/com/example/movieAssistant/model/dto/event/FriendshipEvent.java) </a>
+Класс содержит следующие сведения:
+```
+- id, логин и список друзей пользователя, направившего заявку,
+- id, логин и список друзей адресата заявки,
+- статус заявки (отозвана/актуальна) и ее рассмотрения (принята/отклонена/оставлена без рассмотрения).
+```
+- Во избежание изменения кода предыдущей версии приложения, добавление функции отправки сообщений реализовано с использованием АОП.
+Класс [KafkaProducerAspect](src/main/java/com/example/movieAssistant/kafka/KafkaProducerAspect.java) содержит методы,
+которые выполняются после успешного завершения указанных выше методов сервисов.
+- Адрес сервера Apache Kafka настраивается свойством ```spring.kafka.bootstrap-servers```, при запуске приложения или
+  в конфигурационном файле [application.yml.](src/main/resources/application.yml)
+- Создание новых топиков и их настройка осуществляется в классе [KafkaTopicConfig.](src/main/java/com/example/movieAssistant/kafka/KafkaTopicConfig.java)
+- Для быстрого запуска приложения и тестирования интеграции с Apache Kafka можно использовать конфигурационный файл [docker-compose-with-kafka.yml,](src/main/resources/docker/docker-compose-with-kafka.yml)
+который содержит:
+  - docker-образ текущего приложения ([bolshakovmi/movie_assistant](https://hub.docker.com/repository/docker/bolshakovmi/movie_assistant), требуется версия от ```1.1``` и выше),
+  - образ тестового приложения-потребителя ([bolshakovmi/consumer:1.0](https://hub.docker.com/repository/docker/bolshakovmi/consumer)), 
+который просто выводит в консоль полученные сообщения,
+  - образы ```Apache Kafka``` и ```Zookeeper```, совместно выполняющие роль сервера брокера сообщений,
+  - образ ```provectuslabs/kafka-ui```, который предоставляет, при обращении к порту ```8090```(по умолчанию), 
+интерфейс для получения сведений о текущем состоянии брокера сообщений (топики, потребители, количество отправленных сообщений и т.д.).
+    
+ 
+## <a id="next"> Дальнейшие планы по развитию приложения </a>
+
+- Улучшение качества и стабильности:
+
+  - Добавление модульных и интеграционных тестов.
+  - Настройка логирования с использованием ```ElasticSearch``` для быстрого и комплексного процесса выявления проблем 
+за счет централизованного сбора, хранения и анализа логов.
+  - Интеграция ```Kibana``` для визуализации и анализа данных из ```ElasticSearch```.
+
+- Повышение производительности и оптимизация:
+
+  - Настройка кэширования популярных запросов с использованием БД Redis.
+
+- Расширение функциональности:
+
+  - Создание микросервиса, который реализует динамическую ленту новостей,
+с использованием ```Server-Sent Events``` и реактивных потоков (```Spring WebFlux```).
+В ленте новостей должны динамически отображаться различные события, связанные с друзьями пользователя, например:
+    - добавление нового фильма в коллекцию,
+    - просмотр фильма,
+    - добавление пользователем нового друга.
+
+  - Создание микросервиса для чата пользователей с использованием ```WebSocket```.
+Чат позволит организовать обсуждение в реальном времени конкретного фильма пользователями планирующими или уже посмотревшими его. 
+
+- Мониторинг и анализ:
+
+  - Добавление Prometheus для сбора метрик о работе приложения и выявления трендов в его работе.
+  - Интеграция Grafana для визуализации данных из Prometheus. 
+
+
 ## Лицензия
 Этот проект распространяется под лицензией MIT. Дополнительную информацию можно найти в файле [LICENSE](LICENSE). 
 
@@ -484,7 +560,7 @@ http://localhost:8080/wish/new/pars
 В частности, мы будем благодарны, если вы:
 1. Можете реализовать и интегрировать новые функции для приложения.
 2. Нашли ошибку или способ оптимизировать код программы.
-3. Готовы предложить альтернативные способы реализации функционала прило.
+3. Готовы предложить альтернативные способы реализации функционала приложения.
 
 Чтобы внести вклад:
 1. Создайте fork репозитория.

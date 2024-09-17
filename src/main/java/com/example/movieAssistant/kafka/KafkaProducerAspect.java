@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import java.util.List;
@@ -33,9 +32,7 @@ public class KafkaProducerAspect {
             returning = "wishResponse")
     public void sendToKafkaIfCreateWish(JoinPoint joinPoint, WishResponse wishResponse) {
         WishCreateEvent wishCreateEvent = eventFromResponse(wishResponse);
-        System.out.println("Работаем с " + wishCreateEvent);
-
-        kafkaWishTemplate.send("wish_create", "key", wishCreateEvent);
+        kafkaWishTemplate.send("wish_create", wishCreateEvent);
     }
 
     @AfterReturning(value = "execution(* com.example.movieAssistant.services.WishService.updateWish" +
@@ -45,17 +42,8 @@ public class KafkaProducerAspect {
         Object[] args = joinPoint.getArgs();
         WishUpdateRequest wishUpdateRequest = (WishUpdateRequest) args[0];
         if (wishUpdateRequest.isViewed()){
-            System.out.println("Фильм посмотрен");
-            System.out.println("WishResponse: " + wishResponse.toString());
-
             WishCreateEvent wishCreateEvent = eventFromResponse(wishResponse);
-            System.out.println("Работаем с " + wishCreateEvent);
-
-            kafkaWishTemplate.send("wish_update", "key", wishCreateEvent);
-        } else {
-            System.out.println("фильм не посмотрен - сообщение не отправляется");
-            System.out.println("WishResponse: " + wishResponse.toString());
-            System.out.println("WishUpdateRequest: " + wishUpdateRequest.toString());
+            kafkaWishTemplate.send("wish_update", wishCreateEvent);
         }
     }
 
@@ -77,9 +65,7 @@ public class KafkaProducerAspect {
         FriendshipEvent friendshipEvent = new FriendshipEvent(user1Id, user1Login, user1FriendsLogins,
                 user2Id, user2Login, user2FriendsLogins, isWithdrawn, status);
 
-        System.out.println("Новая дружба: " + friendshipEvent);
-
-        kafkaFriendshipTemplate.send("new_friendship", "key", friendshipEvent);
+        kafkaFriendshipTemplate.send("new_friendship", friendshipEvent);
     }
 
     public WishCreateEvent eventFromResponse(WishResponse wishResponse){
