@@ -9,7 +9,6 @@ import com.example.movieAssistant.services.UserInfoService;
 import com.example.movieAssistant.utils.PaginationUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +29,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class UserInfoServiceImpl implements UserInfoService {
 
     private final ObjectMapper mapper;

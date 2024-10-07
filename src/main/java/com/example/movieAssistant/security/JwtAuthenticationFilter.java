@@ -29,15 +29,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String authHeader = request.getHeader("Authorization");
 
-// 1. Проверяем, нужно ли использовать этот фильтр (есть ли заголовок Bearer).
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);     // иначе шаг 8, пропускаем фильтр,
-            return;                  				     // и запускаем остальную цепочку
+            filterChain.doFilter(request, response);
+            return;
         }
 
         String jwt = authHeader.substring("Bearer ".length());
 
-// 2. Проверяем, что это именно access токен, а не refresh
         String scope = jwtService.extractScope(jwt);
         if (!scope.equals("access")) {
             filterChain.doFilter(request, response);
@@ -46,19 +44,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String username = jwtService.extractUserName(jwt);
 
-// 3. Проверяем, можно ли извлечь username из токена
         if (username==null || username.isEmpty()){
             filterChain.doFilter(request, response);
             return;
         }
 
-// 4. Проверяем, есть ли на данный момент аутентификация
         if (SecurityContextHolder.getContext().getAuthentication() != null){
             filterChain.doFilter(request, response);
             return;
         }
 
-// 5. Проверяем зарегистрирован ли пользователь с таким username
         if (!repository.existsById(username)) {
             filterChain.doFilter(request, response);
             return;
@@ -67,34 +62,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         User user = repository.findById(username).orElseThrow();
         user.getAuthorities();
 
-// 6. Проверяем, валидность токена
         if (!jwtService.isTokenValid(jwt)) {
             filterChain.doFilter(request, response);
             return;
         }
 
-// 7. Если шесть проверок прошли, то аутентифицируемся
-        // 7.1. Получаем объект UsernamePasswordAuthenticationToken.
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                 user,
                 null,
                 user.getAuthorities()
         );
 
-        // 7.2. Устанавливаем в UsernamePasswordAuthenticationToken детали из запроса (типа IP, URI, заголовки,
-        //параметры запроса и т.д.)
         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-        // 7.3. Получаем объект SecurityContext
         SecurityContext context = SecurityContextHolder.createEmptyContext();
 
-        // 7.4. Устанавливаем UsernamePasswordAuthenticationToken в Контекст
         context.setAuthentication(authToken);
 
-        // 7.5. Устанавливаем Контекст в КонтекстХолдер
         SecurityContextHolder.setContext(context);
 
-// 8. Отдаем контроль дальше по Цепочке запросов.
         filterChain.doFilter(request, response);
     }
 }

@@ -10,7 +10,6 @@ import com.example.movieAssistant.model.dto.response.WishResponse;
 import com.example.movieAssistant.services.*;
 import com.example.movieAssistant.utils.PaginationUtil;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -24,11 +23,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-
 @Service
 @Primary
 @RequiredArgsConstructor
-@Slf4j
 public class WishServiceImpl implements WishService {
     
     protected final UserService userService;

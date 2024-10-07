@@ -28,8 +28,6 @@ public class JWTServiceImpl implements JWTService {
     @Value("${jwt.expiration_time.refresh_token}")
     public long refreshTokenExpirationTime;
 
-// 1. Методы генерации токена
-    // метод генерирует токен
     public String generateToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
@@ -40,7 +38,6 @@ public class JWTServiceImpl implements JWTService {
                 .compact();
     }
 
-    // метод генерирует рефреш-токен
     public String generateRToken(String username) {
         String RToken = Jwts.builder()
                 .setSubject(username)
@@ -61,8 +58,6 @@ public class JWTServiceImpl implements JWTService {
         return RToken;
     }
 
-// 2. Методы извлечения сведений из токена
-    // Метод извлекает из токена все Претензии (пары ключ-значение их Полезной нагрузки)
     public Claims extractAllClaims(String token) {
         try {
             return Jwts.parser()
@@ -79,35 +74,28 @@ public class JWTServiceImpl implements JWTService {
         }
     }
 
-    // Метод извлекает одну конкретную Претензию (дату истечения или имя пользователя)
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolvers) {
         final Claims claims = extractAllClaims(token);
         return claimsResolvers.apply(claims);
     }
 
-    // Метод извлекает из токена имя пользователя
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    // Метод извлекает из токена время истечения
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    // метод извлекает "scope" (тип) токена
     public String extractScope(String token) {
         Claims claims = extractAllClaims(token);
         return claims.get("scope", String.class);
     }
 
-// 3. Методы валидации токенов
-    // метод проверяет, не истек ли срок действия токена
     public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
-    // метод проверяет валидность токена
     public boolean isTokenValid(String token) {
         try {
             Jwts.parser()
@@ -120,22 +108,20 @@ public class JWTServiceImpl implements JWTService {
         }
     }
 
-    // метод проверяет, что у токена истек срок, но в остальном он валиден
     public boolean isTokenExpiredButValid(String token) {
         try {
-            // Парсинг JWT токена и получение объекта Claims
             Jwts.parser()
                 .setSigningKey(jwtSigningKey).build()
                 .parseClaimsJws(token)
                 .getBody();
         } catch (SignatureException e) {
-            return false;   // подпись токена подделана
+            return false;
         } catch (ExpiredJwtException e) {
-            return true;   // подпись токена не подделана, срок истек
+            return true;
         } catch (Exception e) {
-            return false;   // токен недействителен по другим причинам
+            return false;
         }
 
-        return false;      // токен действителен (не истек и не подделан)
+        return false;
     }
 }

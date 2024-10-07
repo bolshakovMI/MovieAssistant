@@ -8,16 +8,13 @@ import com.example.movieAssistant.model.db.repository.MovieRepo;
 import com.example.movieAssistant.model.dto.request.WishRequest;
 import com.example.movieAssistant.services.MovieService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class MovieServiceImpl implements MovieService {
     private final MovieRepo movieRepo;
     private final GenreRepo genreRepo;
